@@ -1,0 +1,55 @@
+version: "3.7"
+services:
+  dev-files-backend:
+    build:
+      dockerfile: Dockerfile
+      context: backend/
+      args:
+        requirements: requirements/base.txt
+    image: dev-files-backend
+    restart: "no"
+    container_name: dev-files-backend
+    command: sh -c 'python /app/manage.py runserver 0.0.0.0:8000'
+    ports:
+      - 8000:8000
+    volumes:
+      - ./backend:/app
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.base
+    depends_on:
+      - dev-files-db
+
+  dev-files-redis:
+    image: redis:5.0.7  
+    container_name: dev-files-redis
+    expose:
+      - 6379
+
+  dev-files-celery:
+    image: dev-files-backend
+    restart: "no"
+    container_name: dev-files-celery
+    command: celery -A config worker -l info
+    volumes:
+      - ./backend:/app
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.base
+    depends_on:
+      - dev-files-db
+      - dev-files-redis
+
+  dev-files-db:
+    restart: "no"
+    image: postgres:13
+    container_name: dev-files-db
+    ports:
+      - 5435:5432
+    environment:
+      - POSTGRES_USER=files
+      - POSTGRES_PASSWORD=files
+      - POSTGRES_DB=files
+    volumes:
+      - files_postgresql_data_develop:/var/lib/postgresql/data
+
+volumes:
+  files_postgresql_data_develop:
