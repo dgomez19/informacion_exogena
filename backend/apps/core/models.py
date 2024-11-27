@@ -66,7 +66,12 @@ class File(TimeStampedModel):
     )
 
     file_date = models.DateTimeField(
-        verbose_name='Fecha del archivo'
+        verbose_name='Fecha del archivo',
+        null=True
+    )
+
+    type = models.CharField(
+        verbose_name="Tipo",
     )
 
 
@@ -98,11 +103,6 @@ class FileDetail(TimeStampedModel):
 
     surnames = models.CharField(
         verbose_name='Número de documento',
-        blank=True
-    )
-
-    address = models.CharField(
-        verbose_name='Dirección',
         blank=True
     )
 

@@ -13,5 +13,17 @@ urlpatterns = [
         'files/<uuid:uuid>/',
         views.FileRetrieveUpdateDestroyAPIView.as_view(),
         name='core-file-api'
+    ),
+
+    path(
+        'file-detail/',
+        views.FileDetailListAPIView.as_view(),
+        name='core-file-detail-api'
+    ),
+
+    path(
+        'report-file-detail/',
+        views. ReportFileDetailExcelListAPIView.as_view(),
+        name='core-report-file-detail-api'
     )
 ]

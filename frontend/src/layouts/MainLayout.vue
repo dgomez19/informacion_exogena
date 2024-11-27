@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          Quasar App
+          CONTACTABILIDAD
         </q-toolbar-title>
 
         <div>Quasar v{{ $q.version }}</div>
@@ -46,61 +46,31 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import EssentialLink from 'components/EssentialLink.vue';
+import { ref } from 'vue'
+import EssentialLink from 'components/EssentialLink.vue'
 
 defineOptions({
-  name: 'MainLayout',
-});
+  name: 'MainLayout'
+})
 
 const linksList = [
   {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev',
+    title: 'CARGAR ARCHIVOS',
+    caption: 'Cargue de archivos para ser procesados',
+    icon: 'upload',
+    link: '/#/upload-file'
   },
   {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework',
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev',
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev',
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev',
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev',
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev',
-  },
-];
+    title: 'LISTAR TERCEROS',
+    caption: 'Listado de terceros',
+    icon: 'people',
+    link: '/#/third'
+  }
+]
 
-const leftDrawerOpen = ref(false);
+const leftDrawerOpen = ref(false)
 
-function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value;
+function toggleLeftDrawer () {
+  leftDrawerOpen.value = !leftDrawerOpen.value
 }
 </script>

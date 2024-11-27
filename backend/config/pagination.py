@@ -1,15 +1,8 @@
-from rest_framework.views import Response
 from rest_framework.pagination import PageNumberPagination
 
 
-class Paginacion(PageNumberPagination):
-    """"""
+class SizedPageNumberPagination(PageNumberPagination):
 
-    page_query_param = 'pagina'
-    page_size_query_param = 'tamano_pagina'
-
-    def get_paginated_response(self, data):
-        return Response({
-            'cantidad': self.page.paginator.count,
-            'resultado': data
-        })
+    page_size = 10
+    max_page_size = 100
+    page_size_query_param = 'size'

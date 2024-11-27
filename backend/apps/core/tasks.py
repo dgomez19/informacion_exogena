@@ -20,13 +20,11 @@ def upload_file():
     )
 
     for pending in pendings:
-        pending.status = File.IN_PROGRESS
-        pending.save()
-
         try:
-
-            # Abrir y leer el archivo CSV
             with open(f'{settings.MEDIA_ROOT}/{pending.file_route}', newline='', encoding='utf-8') as csvfile:
+                pending.status = File.IN_PROGRESS
+                pending.save()
+
                 reader = csv.reader(csvfile)
 
                 count = 0
@@ -55,10 +53,14 @@ def upload_file():
                 position_direccion = None
                 position_direccion_notificacion = None
                 file_detail = None
+                is_error = False
 
                 for row in reader:
 
-                    new_data = [item.strip('"') for item in row[0].split(',')]
+                    new_data = [item for item in row]
+
+                    if 'numero_documento' not in new_data:
+                        new_data = [item.strip('"') for item in row[0].split(',')]
 
                     if count == 0:
                         if 'tipo_documento' in new_data:
@@ -66,6 +68,9 @@ def upload_file():
 
                         if 'numero_documento' in new_data:
                             position_numero_documento = new_data.index('numero_documento')
+                        else:
+                            is_error = True
+                            break
 
                         if 'nombre_razon_social' in new_data:
                             position_nombre_razon_social = new_data.index('nombre_razon_social')
@@ -132,52 +137,51 @@ def upload_file():
 
                     elif count > 0:
                         address = build_address(
-                            new_data[position_dir_tipo] if position_dir_tipo else '',
-                            new_data[position_dir_numero] if position_dir_numero else '',
-                            new_data[position_dir_apendice] if position_dir_apendice else '',
-                            new_data[position_dir_orientacion] if position_dir_orientacion else '',
-                            new_data[position_dir_numero2] if position_dir_numero2 else '',
-                            new_data[position_dir_apendice2] if position_dir_apendice2 else '',
-                            new_data[position_dir_orientacion2] if position_dir_orientacion2 else '',
-                            new_data[position_dir_placa] if position_dir_placa else '',
-                            new_data[position_dir_interior] if position_dir_interior else '',
-                            new_data[position_dir_bloque] if position_dir_bloque else '',
-                            new_data[position_direccion_especial] if position_direccion_especial else ''
+                            new_data[position_dir_tipo] if position_dir_tipo is not None else '',
+                            new_data[position_dir_numero] if position_dir_numero is not None else '',
+                            new_data[position_dir_apendice] if position_dir_apendice is not None else '',
+                            new_data[position_dir_orientacion] if position_dir_orientacion is not None else '',
+                            new_data[position_dir_numero2] if position_dir_numero2 is not None else '',
+                            new_data[position_dir_apendice2] if position_dir_apendice2 is not None else '',
+                            new_data[position_dir_orientacion2] if position_dir_orientacion2 is not None else '',
+                            new_data[position_dir_placa] if position_dir_placa is not None else '',
+                            new_data[position_dir_interior] if position_dir_interior is not None else '',
+                            new_data[position_dir_bloque] if position_dir_bloque is not None else '',
+                            new_data[position_direccion_especial] if position_direccion_especial is not None else ''
                         )
 
                         file_detail = [
                             FileDetail(
                                 file=pending,
-                                type_document=new_data[position_type_document] if position_type_document else 0,
-                                number_document=new_data[position_numero_documento] if position_numero_documento else '',
-                                social_reason=new_data[position_nombre_razon_social] if position_nombre_razon_social else '',
-                                surnames=new_data[position_apellidos] if position_apellidos else '',
-                                email=new_data[position_correo_electronico] if position_correo_electronico else '',
-                                department=new_data[position_departamento] if position_departamento else '',
-                                municipality=new_data[position_municipio] if position_municipio else '',
-                                country=new_data[position_pais] if position_pais else '',
-                                phone=new_data[position_tel_fijo] if position_tel_fijo else '',
-                                cell_phone=new_data[position_tel_celular] if position_tel_celular else '',
-                                # address=new_data[position_direccion] if position_direccion else '',
-                                # compound_address=address,
-                                notification_address=new_data[position_direccion_notificacion] if position_direccion_notificacion else ''
+                                type_document=new_data[position_type_document] if position_type_document is not None else 0,
+                                number_document=new_data[position_numero_documento] if position_numero_documento is not None else '',
+                                social_reason=new_data[position_nombre_razon_social] if position_nombre_razon_social is not None else '',
+                                surnames=new_data[position_apellidos] if position_apellidos is not None else '',
+                                email=new_data[position_correo_electronico] if position_correo_electronico is not None else '',
+                                department=new_data[position_departamento] if position_departamento is not None else '',
+                                municipality=new_data[position_municipio] if position_municipio is not None else '',
+                                country=new_data[position_pais] if position_pais is not None else '',
+                                phone=new_data[position_tel_fijo] if position_tel_fijo is not None else '',
+                                cell_phone=new_data[position_tel_celular] if position_tel_celular is not None else '',
+                                address=new_data[position_direccion] if position_direccion is not None else '',
+                                compound_address=address,
+                                notification_address=new_data[position_direccion_notificacion] if position_direccion_notificacion is not None else ''
                             )
                         ]
 
                     count += 1
                     FileDetail.objects.bulk_create(file_detail)
 
-            pending.status = File.SUCCESSFULLY_COMPLETED
+            if is_error:
+                pending.status = File.FINISHED_ERRORS
+            else:
+                pending.status = File.SUCCESSFULLY_COMPLETED
+
             pending.save()
 
         except Exception as error:
-            print("error")
-            print("error")
-            print(error)
-
             pending.status = File.FINISHED_ERRORS
             pending.save()
-
 
 def build_address(
     dir_tipo,
