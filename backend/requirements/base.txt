@@ -1,0 +1,36 @@
+# django
+django===5.0.8
+pillow===10.3.0
+django-model-utils===4.3.1
+django-cors-headers===4.3.1
+
+# postgres
+psycopg===3.1.17
+psycopg-binary===3.1.17
+
+# django rest
+djangorestframework===3.15.2
+django-filter===23.5
+
+# sentry
+sentry-sdk===2.13.0
+raven===6.10.0
+
+# celery
+celery==5.4.0
+django-celery-results==2.0.1
+
+# redis
+redis==4.4.4
+
+# others
+requests===2.32.2
+django-cities-light===3.10.1
+openpyxl==3.1.2
+xhtml2pdf==0.2.15
+qrcode==7.4.2
+XlsxWriter==3.2.0
+mailjet-rest==1.3.4
+weasyprint==62.3
+pydash==8.0.4
+drf-excel==2.4.0

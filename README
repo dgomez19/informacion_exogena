@@ -1,0 +1,3 @@
+python3 -m venv ~/.virtualenvs/files
+
+source ~/.virtualenvs/files/bin/activate

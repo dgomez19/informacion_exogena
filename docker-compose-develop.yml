@@ -1,0 +1,55 @@
+version: "3.7"
+services:
+  dev-contactabilidad-backend:
+    build:
+      dockerfile: Dockerfile
+      context: backend/
+      args:
+        requirements: requirements/base.txt
+    image: dev-contactabilidad-backend
+    restart: "no"
+    container_name: dev-contactabilidad-backend
+    command: sh -c 'python /app/manage.py runserver 0.0.0.0:8000'
+    ports:
+      - 8000:8000
+    volumes:
+      - ./backend:/app
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.base
+    depends_on:
+      - dev-contactabilidad-db
+
+  dev-contactabilidad-redis:
+    image: redis:5.0.7  
+    container_name: dev-contactabilidad-redis
+    expose:
+      - 6379
+
+  dev-contactabilidad-celery:
+    image: dev-contactabilidad-backend
+    restart: "no"
+    container_name: dev-contactabilidad-celery
+    command: celery -A config worker -l info
+    volumes:
+      - ./backend:/app
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.base
+    depends_on:
+      - dev-contactabilidad-db
+      - dev-contactabilidad-redis
+
+  dev-contactabilidad-db:
+    restart: "no"
+    image: postgres:13
+    container_name: dev-contactabilidad-db
+    ports:
+      - 5435:5432
+    environment:
+      - POSTGRES_USER=contactabilidad
+      - POSTGRES_PASSWORD=contactabilidad
+      - POSTGRES_DB=contactabilidad
+    volumes:
+      - contactabilidad_postgresql_data_develop:/var/lib/postgresql/data
+
+volumes:
+  contactabilidad_postgresql_data_develop:
