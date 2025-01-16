@@ -29,6 +29,7 @@ from rest_framework.response import Response
 class FileCreateAPIView(generics.ListCreateAPIView):
 
     authentication_classes = []
+
     permission_classes = []
 
     queryset = File.objects.all()
@@ -39,7 +40,10 @@ class FileCreateAPIView(generics.ListCreateAPIView):
 
     search_fields = ('name',)
 
-    filterset_fields = ['versioning__uuid',]
+    filterset_fields = [
+        'versioning__uuid',
+        'status'
+    ]
 
     ordering = ('-id',)
 
@@ -77,7 +81,10 @@ class FileDetailListAPIView(ListAPIView):
 
     search_fields = ('social_reason', 'number_document')
 
-    filterset_fields = ['file__versioning__uuid',]
+    filterset_fields = {
+        'file__uuid': ['in'],
+        'file__versioning__uuid': ['exact']
+    }
 
     queryset = FileDetail.objects.all()
 
@@ -89,6 +96,11 @@ class FileDetailListAPIView(ListAPIView):
 
     def get_queryset(self):
         qs = super().get_queryset()
+
+        print('- _ -"')
+        print(': : : : : : : ')
+
+        print(self.request.GET)
 
         if 'created' in self.request.GET:
             fechas = self.request.GET['created'].split(':')

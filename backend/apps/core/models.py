@@ -36,6 +36,11 @@ class Versioning(TimeStampedModel):
         max_length=200,
     )
 
+    close = models.BooleanField(
+        verbose_name='Cerrar cargue',
+        default=False
+    )
+
     @property
     def get_files(self):
         return self.files.count()
@@ -118,11 +123,11 @@ class FileDetail(TimeStampedModel):
     )
 
     social_reason = models.CharField(
-        verbose_name='Número de documento',
+        verbose_name='Razón social',
     )
 
     surnames = models.CharField(
-        verbose_name='Número de documento',
+        verbose_name='Apellidos',
         blank=True
     )
 

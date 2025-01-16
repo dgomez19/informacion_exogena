@@ -1,11 +1,5 @@
 <template>
   <div class="row no-wrap justify-between items-center q-mb-md">
-    <!-- <q-input v-model="pagination.filter" outlined dense :debounce="500" placeholder="Buscar por nombre" class="col-6" @update:model-value="load">
-      <template #prepend>
-        <q-icon name="search" />
-      </template>
-    </q-input> -->
-
     <div class="row q-gutter-x-md">
       <q-btn outline color="primary" icon="restart_alt" class="q-px-sm" :disable="loading" @click="load">
         <q-tooltip>Recargar registros</q-tooltip>
@@ -59,6 +53,13 @@
         <q-btn flat round color="dark" size="sm" icon="more_vert" @click="event => showMenu(event, props.row)" :disable="loading" />
       </q-td>
     </template>
+
+    <template #body-cell-close="props">
+      <q-td :props="props">
+        <q-toggle v-if="!props.row.close" color="primary" v-model="props.row.close" size="xs" checked-icon="check" unchecked-icon="clear" @update:model-value="() => close(props.row)" />
+        <q-badge v-else outline color="red" label="Cerrado" />
+      </q-td>
+    </template>
   </q-table>
 
   <context-menu ref="$menu" :items="MENU_ITEMS" />
@@ -75,6 +76,8 @@ import ContextMenu from 'src/components/ContextMenu.vue'
 
 import { useRouter } from 'vue-router'
 
+import { Notify, Dialog } from 'quasar'
+
 const $router = useRouter()
 
 const $emit = defineEmits(['create', 'toggle-active', 'reset-password', 'update', 'delete'])
@@ -83,6 +86,7 @@ const columns = [
   { name: 'created', align: 'center', label: 'FECHA DEL CARGUE', field: 'created' },
   { name: 'name', align: 'center', label: 'NOMBRE', field: 'name' },
   { name: 'get_files', align: 'center', label: 'CANTIDAD DE ARCHIVOS', field: 'get_files' },
+  { name: 'close', align: 'center', label: '¿CERRAR?' },
   { name: 'options', align: 'center' }
 ]
 
@@ -135,6 +139,39 @@ const setLoading = async (value) => {
 
 const upload = (uuid) => {
   $router.push(`${uuid}/upload-file`)
+}
+
+const close = async (row) => {
+  if (!row.close) {
+    return false
+  }
+
+  loading.value = true
+
+  const callback = async () => {
+    try {
+      await api.put(`core/versioning/${row.uuid}/`, { ...row, close: row.close })
+
+      Notify.create({
+        type: 'success',
+        message: 'Se ha cerrado el cargue exitosamente.'
+      })
+    } catch (err) {}
+  }
+
+  loading.value = false
+
+  Dialog.create({
+    title: '¿Está segura/ro que desea cerrar este ciclo?',
+    message: 'No podrá cargar mas archivos.',
+    componentProps: { flat: true, bordered: true },
+    ok: { unelevated: true, noCaps: true, color: 'primary', label: 'Sí, cerrar cargue' },
+    cancel: { outline: true, noCaps: true, color: 'primary', label: 'Cancelar' }
+  }).onOk(() => {
+    callback()
+  }).onCancel(() => {
+    row.close = false
+  })
 }
 
 onMounted(() => load())

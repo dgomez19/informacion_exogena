@@ -94,6 +94,7 @@ class VersioningCreateSerializer(serializers.ModelSerializer):
         model = Versioning
         fields = [
             'name',
+            'close'
         ]
 
 
@@ -107,6 +108,7 @@ class VersioningListSerializer(serializers.ModelSerializer):
             'id',
             'uuid',
             'name',
+            'close',
             'created',
             'get_files'
         ]
@@ -127,6 +129,7 @@ class FileListSerializer(serializers.ModelSerializer):
     class Meta:
         model = File
         fields = [
+            'uuid',
             'number_records',
             'type',
             'status',
