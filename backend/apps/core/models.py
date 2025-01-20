@@ -195,6 +195,16 @@ class Report(TimeStampedModel):
         null=True
     )
 
+    columns = models.CharField(
+        verbose_name='Columnas',
+        null=True
+    )
+
+    grouped = models.CharField(
+        verbose_name='Registro agrupado',
+        null=True
+    )
+
     versioning = models.ForeignKey(
         'core.Versioning',
         verbose_name='Tipo de cargue',

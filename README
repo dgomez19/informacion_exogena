@@ -1,5 +1,41 @@
-python3 -m venv ~/.virtualenvs/files
+# CONTACTABILIDAD
 
-source ~/.virtualenvs/files/bin/activate
+## Ambiente de desarrollo
+* Backend: Django + Postgresql
+* Frontend: VueJS + Quasar
 
-# CONTABILIDAD
+## Para inciar el ambiente de desarrollo
+En la terminal escribir el siguiente comando:
+
+```bash
+docker-compose -f docker-compose-develop.yml up
+```
+
+Si desea recompilar la imagen del docker corra
+
+```bash
+docker-compose -f docker-compose-develop.yml up --build
+```
+
+Ahora la aplicación deberá estar funcionando al visitar las urls: 
+* Backend: http://127.0.0.1:8000/api/
+* Frontend: http://127.0.0.1:9000/
+
+Los datos de conexión a la base de datos son los siguientes:
+* Usuario: pila
+* Base de datos: pila
+* Password: pila
+* host: 127.0.0.1
+* puerto: 5435
+
+## Para ejecutar comandos django en el ambiente de desarrollo
+Se debe ejecutar el comando de la siguiente forma:
+```bash
+docker exec -it dev-pila-backend  python manage.py <comando>
+```
+Ejemplos
+```bash
+docker exec -it dev-pila-backend  python manage.py makemigrations
+docker exec -it dev-pila-backend  python manage.py migrate
+docker exec -it dev-pila-backend  python manage.py createsuperuser
+```

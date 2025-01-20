@@ -207,3 +207,24 @@ class ReportListSerializer(serializers.ModelSerializer):
             'code': obj.status,
             'description': obj.get_status_display()
         }
+
+
+class FileDetailListGrouped(serializers.Serializer):
+
+    address = serializers.CharField(required=False)
+
+    phone = serializers.CharField(required=False)
+
+    cell_phone = serializers.CharField(required=False)
+
+    count = serializers.IntegerField(required=False)
+
+    number_document = serializers.CharField(required=False)
+
+    social_reason = serializers.CharField(required=False)
+
+    compound_address = serializers.CharField(required=False)
+
+    email = serializers.CharField(required=False)
+
+    notification_address = serializers.CharField(required=False)

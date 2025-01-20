@@ -25,6 +25,8 @@ from apps.core.tasks import (
 
 from rest_framework.response import Response
 
+from django.db.models import Count
+
 
 class FileCreateAPIView(generics.ListCreateAPIView):
 
@@ -79,7 +81,7 @@ class FileDetailListAPIView(ListAPIView):
 
     filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
 
-    search_fields = ('social_reason', 'number_document')
+    # search_fields = ('social_reason', 'number_document')
 
     filterset_fields = {
         'file__uuid': ['in'],
@@ -94,13 +96,37 @@ class FileDetailListAPIView(ListAPIView):
 
     lookup_field = 'uuid'
 
+    def get_serializer_class(self):
+        if self.request.GET.get('grouped'):
+            return serializers.FileDetailListGrouped
+        return serializers.FileDetailListSerializer
+
     def get_queryset(self):
         qs = super().get_queryset()
 
-        print('- _ -"')
-        print(': : : : : : : ')
+        column = list()
 
-        print(self.request.GET)
+        if self.request.GET.get('columns__in'):
+            column = self.request.GET.get('columns__in').split(',')
+
+        if self.request.GET.get('search'):
+            qs = qs.filter(number_document__in=self.request.GET.get('search').split(" "))
+
+        column.append('number_document')
+
+        if self.request.GET.get('grouped'):
+            print("*column - *column - *column - *column")
+            print(*column)
+
+            qs = qs.values(
+                *column
+            ).annotate(
+                count=Count('number_document')
+            ).order_by(
+                'number_document'
+            )
+
+            return qs
 
         if 'created' in self.request.GET:
             fechas = self.request.GET['created'].split(':')
@@ -122,7 +148,6 @@ class ReportFileDetailExcelListAPIView(ListAPIView):
     permission_classes = []
 
     def get(self, request, *args, **kwargs):
-
         versioning = None
 
         if self.request.GET.get('versioning'):
@@ -132,11 +157,14 @@ class ReportFileDetailExcelListAPIView(ListAPIView):
             file_excel=None,
             file_pdf=None,
             document=self.request.GET.get('number_document'),
+            columns=self.request.GET.get('columns__in'),
+            grouped=self.request.GET.get('grouped'),
+            # file=self.request.GET.get('file__uuid__in'),
             versioning=versioning,
             status=File.PENDING
         )
 
-        generate_excel_report.delay(report.id)
+        generate_excel_report(report.id)
         # generate_excel_report.delay(report.id)
         return Response("Done", status=status.HTTP_200_OK)
 
