@@ -3,7 +3,8 @@ from celery import shared_task
 from apps.core.models import (
     FileDetail,
     File,
-    Report
+    Report,
+    Versioning
 )
 
 from django.conf import settings
@@ -79,9 +80,6 @@ def upload_excel(file):
             if 'tipo_documento' in row:
                 position_type_document = row.index('tipo_documento')
 
-            if 'tipo_documento' in row:
-                position_type_document = row.index('tipo_documento')
-
             if 'nombre_razon_social' in row:
                 position_social_reason = row.index('nombre_razon_social')
 
@@ -130,8 +128,6 @@ def upload_excel(file):
                     notification_address=row[position_notification_address] if position_notification_address else ''
                 )
             except Exception as error:
-                print("------")
-                print("------")
                 print(error)
 
         count += 1
@@ -325,7 +321,6 @@ def upload_file():
             pending.save()
 
         except Exception as error:
-            print("ERROR")
             print(error)
             pending.status = File.FINISHED_ERRORS
             pending.save()
@@ -352,7 +347,7 @@ def build_address(
 
 
 
-# @shared_task
+@shared_task
 def generate_excel_report(report_id):
     report = Report.objects.filter(id=report_id).first()
 
@@ -415,9 +410,6 @@ def generate_excel_report(report_id):
 
     if report.document:
         documents = report.document.split(" ")
-
-        print('DOCUMENTO')
-        print('DOCUMENTO', documents)
 
         details = details.filter(number_document__in=documents)
 
@@ -504,12 +496,31 @@ def generate_excel_report(report_id):
 def generate_pdf_report(report):
     template = get_template('report.html')
 
-    versioning = report.versioning.files.all() if report.versioning else None
+    files = None
+
+    print('x,x,x,x,x,', report.files)
+    print('x,x,x,x,x,', type(report.files))
+
+    if report.files is not None:
+        print('xxxx')
+        print('xxxx')
+        print('xxxx')
+        print('xxxx')
+        files = File.objects.filter(uuid__in=report.files.split(','))
+
+    versioning = report.versioning
+    versionings = Versioning.objects.all()
+
+    print("files")
+    print(files)
 
     html = template.render({
         'report': report,
-        'versioning': versioning
+        'files': files,
+        'versioning': versioning,
+        'all_versioning': versionings
     })
+
 
     route = os.path.join(settings.MEDIA_ROOT, 'reports/')
     os.makedirs(route, exist_ok=True)

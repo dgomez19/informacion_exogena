@@ -2,170 +2,189 @@
 <!DOCTYPE html>
 <html lang="es">
 	<head>
-    <title>REPORTE</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <style>
-    html, body {
-      margin: 0px;
-      padding: 0px;
-    }
-    table { vertical-align: top }
-    th, td { padding: 3px 4px 1px; line-height: 1em; font-weight: 200; text-align: left;}
-    .no_border {
-      border: none;
-    }
-    #info_width {
-      width: 60%
-    }
-    .text-center {text-align: center;}
-    .text-left {text-align: left;}
-    .text-right {text-align: right;}
+        <title>REPORTE</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <style>
+            html, body {
+            margin: 0px;
+            padding: 0px;
+            }
+            table { vertical-align: top }
+            th, td { padding: 3px 4px 1px; line-height: 1em; font-weight: 200; text-align: left;}
+            .no_border {
+            border: none;
+            }
+            #info_width {
+            width: 60%
+            }
+            .text-center {text-align: center;}
+            .text-left {text-align: left;}
+            .text-right {text-align: right;}
 
-    .text1 {
-      font-size: 16px;
-      font-style: italic;
-      line-height: 1em;
-      padding: 4px;
-      text-align: center;
-    }
-    .w100 {width: 100%;}
-    .w60 {width: 60%;}
-    .w55 {width: 55%;}
-    .w50 {width: 50%;}
-    .w40 {width: 40%;}
-    .w35 {width: 35%;}
-    .w30 {width: 30%;}
-    .w25 {width: 25%;}
-    .w20 {width: 20%;}
-    .w15 {width: 15%;}
-    .w10 {width: 10%;}
-    .w5 {width: 5%;}
-    .w3 {width: 3%;}
+            .text1 {
+            font-size: 16px;
+            font-style: italic;
+            line-height: 1em;
+            padding: 4px;
+            text-align: center;
+            }
+            .w100 {width: 100%;}
+            .w60 {width: 60%;}
+            .w55 {width: 55%;}
+            .w50 {width: 50%;}
+            .w40 {width: 40%;}
+            .w35 {width: 35%;}
+            .w30 {width: 30%;}
+            .w25 {width: 25%;}
+            .w20 {width: 20%;}
+            .w15 {width: 15%;}
+            .w10 {width: 10%;}
+            .w5 {width: 5%;}
+            .w3 {width: 3%;}
 
-    .right {
-      display: inline-block;
-      float: right;
-    }
+            .right {
+            display: inline-block;
+            float: right;
+            }
 
-    .border {
-      border: 2px solid #000;
-      padding: 5px;
-    }
-    .borderb {
-      border-bottom:1px solid #000;
-    }
-    .bg_negro {
-      background: #000;
-    }
-  </style>
-  </head>
-	<body>
-    <div class="text-center">
-        <img alt="Logo" src="https://i.ibb.co/0GWy6k5/logo-medellin.png" height="150px" /><br>
-    </div> <br>
+            .border {
+            border: 2px solid #000;
+            padding: 5px;
+            }
+            .borderb {
+            border-bottom:1px solid #000;
+            }
+            .bg_negro {
+            background: #000;
+            }
+        </style>
+    </head>
 
-    <table border="0" aria-label="seccion_a">
-      <tr>
-        <th id="encabezado" class="w100">
-          <div class="border text1">
-            REPORTE CONTACTABILIDAD
-            <span style="font-size: 14px;">{{ report.created|date:"Y-m-d H:i" }}</span>
-          </div>
-        </th>
-      </tr>
-    </table> <br>
+    <body>
+        <div style="text-align: center; font-size: xx-large;">
+            <strong>
+                REPORTE CONTACTABILIDAD
+            </strong> <br>
+            <i style="text-align: center; font-size: large;">{{ report.created|date:"Y-m-d H:i" }}</i>
+        </div> <br>
 
-    <table border="0" aria-label="seccion_a">
-        <tr>
-            <th id="encabezado" class="w100">
-                <div class="border text1">
-                    # REGISTROS <br>
-                    <span style="font-size: 14px;">
-                        {{ report.number_records|intcomma }}
-                    </span>
-                </div>
-            </th>
+        <div style="font-size: x-large;">
+            El reporte de contactabilidad se generó el día:
+            <strong> {{ report.created|date:"j \d\e F \d\e Y" }} </strong>
+            arrojando como resultado <strong> {{ report.number_records|intcomma }}</strong> registros, los filtros de busqueda utilizados fueron:
+        </div> <br> <br>
 
-            <th id="encabezado" class="w100">
-                <div class="border text1">
-                    FECHA GENERACIÓN: <br>
-                    <span style="font-size: 14px;">
-                        {{ report.created|date:"Y-m-d H:i" }}
-                    </span>
-                </div>
-            </th>
-        </tr> <br>
-
-        <tr>
-            <th id="encabezado" class="w100">
-                <div class="border text1">
-                    # DIRECCIONES <br>
-                    <span style="font-size: 14px;">
-                        {{ report.address|intcomma }}
-                    </span>
-                </div>
-            </th>
-
-            <th id="encabezado" class="w100">
-                <div class="border text1">
-                    # CELULARES: <br>
-                    <span style="font-size: 14px;">
-                        {{ report.cell_phone|intcomma }}
-                    </span>
-                </div>
-            </th>
-        </tr>
-
-        <tr>
-            <th id="encabezado" class="w100">
-                <div class="border text1">
-                    # TELÉFONOS: <br>
-                    <span style="font-size: 14px;">
-                        {{ report.phone|intcomma }}
-                    </span>
-                </div>
-            </th>
-
-            <th id="encabezado" class="w100">
-                <div class="border text1">
-                    # CORREOS: <br>
-                    <span style="font-size: 14px;">
-                        {{ report.email|intcomma }}
-                    </span>
-                </div>
-            </th>
-        </tr>
-    </table> <br> <br>
-
-    <table border="0" aria-label="seccion_a">
-        <tr>
-          <th id="encabezado" class="w100">
-            <div class="border text1">
-                FUENTES UTILIZADAS
-            </div>
-          </th>
-        </tr>
-
-        {% if report.versioning %}
-            {% for row in versioning %}
+        <div style="font-size: x-large;">
+            <table border="0" aria-label="seccion_f" class="w100" style="margin: 3px 0;">
                 <tr>
-                    <th id="encabezado" class="w100">
-                        <div class="border text1">
-                            {{ row.name }}
-                        </div>
+                  <th id="seccion_f"><strong>FILTROS DE BUSQUEDA</strong></th>
+                </tr>
+              </table>
+          
+              <table border="1" aria-label="seccion_f" class="w100">
+                <tr>
+                    <th id="document">
+                        Número(s) de documento:
+                    </th>
+
+                    <th id="resultado_document">
+                        {{ report.document }}
                     </th>
                 </tr>
-            {% endfor %}
-        {% else %}
-            <tr>
-                <th id="encabezado" class="w100">
-                    <div class="border text1">
-                        TODAS
-                    </div>
-                </th>
-            </tr>
-        {% endif %}
 
-      </table> <br>
+                <tr>
+                    <th id="tipo_cargue">
+                        Tipo de cargue:
+                    </th>
+
+                    <th id="resultado_tipo_cargue">
+                        {% if versioning %}
+                            {{ versioning.name }}
+                        {% else %}
+                            {% for row in all_versioning %}
+                                {{ row.name }},
+                            {% endfor %}
+                        {% endif %}
+                    </th>
+                </tr>
+
+                <tr>
+                    <th id="tipo_cargue">
+                        Archivos:
+                    </th>
+
+                    <th id="resultado_tipo_cargue">
+                        {% if files %}
+                            {% for row in files %}
+                                {{ row.name }},
+                            {% endfor %}
+                        {% else %}
+                            TODOS
+                        {% endif %}
+                    </th>
+                </tr>
+              </table>
+            </table>
+        </div> <br> <br>
+
+        <div style="font-size: x-large;">
+            <table border="0" aria-label="seccion_f" class="w100" style="margin: 3px 0;">
+                <tr>
+                  <th id="seccion_f"><strong>RESULTADOS ENCONTRADOS</strong></th>
+                </tr>
+            </table>
+          
+            <table border="1" aria-label="seccion_f" class="w100">
+                <tr>
+                    <th id="number_records">
+                        NÚMERO DE REGISTROS
+                    </th>
+
+                    <th id="resultado_number_records">
+                        {{ report.number_records }}
+                    </th>
+                </tr>
+
+                <tr>
+                    <th id="number_records">
+                        DIRECCIONES ENCONTRADAS
+                    </th>
+
+                    <th id="resultado_number_records">
+                        {{ report.address }}
+                    </th>
+                </tr>
+
+                <tr>
+                    <th id="number_records">
+                        CELULARES ENCONTRADAS
+                    </th>
+
+                    <th id="resultado_number_records">
+                        {{ report.cell_phone }}
+                    </th>
+                </tr>
+
+                <tr>
+                    <th id="number_records">
+                        TELÉFONOS ENCONTRADAS
+                    </th>
+
+                    <th id="resultado_number_records">
+                        {{ report.phone }}
+                    </th>
+                </tr>
+
+                <tr>
+                    <th id="number_records">
+                        CORREOS ENCONTRADOS
+                    </th>
+
+                    <th id="resultado_number_records">
+                        {{ report.email }}
+                    </th>
+                </tr>
+            </table>
+        </div>
     </body>
 </html>

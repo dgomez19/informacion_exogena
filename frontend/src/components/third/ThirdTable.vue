@@ -15,7 +15,7 @@
               </div>
 
               <div class="col-md-3 col-xs-3">
-                <q-select outlined dense clearable="" v-model="files" label="Archivos" multiple use-chips stack-label option-value="uuid" option-label="name" :options="optionFiles" />
+                <q-select use-input outlined dense clearable="" v-model="files" label="Archivos" multiple use-chips stack-label option-value="uuid" option-label="name" :options="optionFiles" />
               </div>
 
               <div class="col-3 col-md-3 col-xs-3">
@@ -343,8 +343,6 @@ const request = async ({ pagination: pagination_ }) => {
       columnsUuid.push(value.uuid)
     })
 
-    console.log('columnsUuid', columnsUuid)
-
     searchParams += `&columns__in=${columnsUuid}`
   }
 
@@ -457,7 +455,8 @@ const getVersioning = async () => {
 }
 
 const getFiles = async () => {
-  const { data } = await api.get(`core/files/?status=${SUCCESSFULLY_COMPLETED}`)
+  console.log('xxx', versioning.value)
+  const { data } = await api.get(`core/files/?page=1&size=100&status=${SUCCESSFULLY_COMPLETED}`)
   optionFiles.value = data.results
 }
 

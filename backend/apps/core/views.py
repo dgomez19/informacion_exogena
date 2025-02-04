@@ -34,7 +34,7 @@ class FileCreateAPIView(generics.ListCreateAPIView):
 
     permission_classes = []
 
-    queryset = File.objects.all()
+    queryset = File.objects.all().order_by('-id')
 
     filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
 
@@ -115,9 +115,6 @@ class FileDetailListAPIView(ListAPIView):
         column.append('number_document')
 
         if self.request.GET.get('grouped'):
-            print("*column - *column - *column - *column")
-            print(*column)
-
             qs = qs.values(
                 *column
             ).annotate(
@@ -159,42 +156,14 @@ class ReportFileDetailExcelListAPIView(ListAPIView):
             document=self.request.GET.get('number_document'),
             columns=self.request.GET.get('columns__in'),
             grouped=self.request.GET.get('grouped'),
-            # file=self.request.GET.get('file__uuid__in'),
+            files=str(self.request.GET.get('file__uuid__in')) if self.request.GET.get('file__uuid__in') else None,
             versioning=versioning,
             status=File.PENDING
         )
 
-        generate_excel_report(report.id)
-        # generate_excel_report.delay(report.id)
+        # generate_excel_report(report.id)
+        generate_excel_report.delay(report.id)
         return Response("Done", status=status.HTTP_200_OK)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

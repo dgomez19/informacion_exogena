@@ -195,6 +195,11 @@ class Report(TimeStampedModel):
         null=True
     )
 
+    files = models.CharField(
+        verbose_name='Archivos',
+        null=True
+    )
+
     columns = models.CharField(
         verbose_name='Columnas',
         null=True
